@@ -190,15 +190,15 @@ func (t *Topology) AddRequirements(podRequirements, nodeRequirements scheduling.
 }
 
 // Register is used to register a domain as available across topologies for the given topology key.
-func (t *Topology) Register(topologyKey string, domain string) {
+func (t *Topology) Register(topologyKey string, domain string, callerType string) {
 	for _, topology := range t.topologies {
 		if topology.Key == topologyKey {
-			topology.Register(domain)
+			topology.Register(callerType, domain)
 		}
 	}
 	for _, topology := range t.inverseTopologies {
 		if topology.Key == topologyKey {
-			topology.Register(domain)
+			topology.Register(callerType, domain)
 		}
 	}
 }

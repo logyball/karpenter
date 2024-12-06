@@ -24,7 +24,7 @@ import (
 )
 
 func init() {
-	crmetrics.Registry.MustRegister(SchedulingDurationSeconds, QueueDepth)
+	crmetrics.Registry.MustRegister(SchedulingDurationSeconds, QueueDepth, DomainRegistered)
 }
 
 const (
@@ -45,6 +45,15 @@ var (
 		[]string{
 			ControllerLabel,
 		},
+	)
+	DomainRegistered = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Namespace: "karpenter",
+			Subsystem: "domain",
+			Name:      "registered",
+			Help:      "Domains registered",
+		},
+		[]string{"domain", "key", "type", "callerType"},
 	)
 	QueueDepth = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{

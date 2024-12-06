@@ -22,6 +22,7 @@ import (
 
 	"github.com/awslabs/operatorpkg/option"
 	"github.com/mitchellh/hashstructure/v2"
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/samber/lo"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -119,11 +120,12 @@ func (t *TopologyGroup) Counts(pod *v1.Pod, requirements scheduling.Requirements
 }
 
 // Register ensures that the topology is aware of the given domain names.
-func (t *TopologyGroup) Register(domains ...string) {
+func (t *TopologyGroup) Register(callerType string, domains ...string) {
 	for _, domain := range domains {
 		if _, ok := t.domains[domain]; !ok {
 			t.domains[domain] = 0
 			t.emptyDomains.Insert(domain)
+			DomainRegistered.With(prometheus.Labels{"domain": domain, "key": t.Key, "type": t.Type.String(), "callerType": callerType}).Inc()
 		}
 	}
 }
