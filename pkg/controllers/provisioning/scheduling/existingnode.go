@@ -62,6 +62,10 @@ func NewExistingNode(n *state.StateNode, topology *Topology, taints []v1.Taint, 
 	}
 	node.requirements.Add(scheduling.NewRequirement(v1.LabelHostname, v1.NodeSelectorOpIn, n.HostName()))
 	topology.Register(v1.LabelHostname, n.HostName())
+
+	LogyballNewSchedulerTopologiesConsidered.Add(float64(len(topology.topologies)), map[string]string{logyballNodeNameLabel: n.HostName()})
+	LogyballNewSchedulerInverseTopologiesConsidered.Add(float64(len(topology.inverseTopologies)), map[string]string{logyballNodeNameLabel: n.HostName()})
+
 	return node
 }
 

@@ -127,9 +127,11 @@ func (t *TopologyGroup) Counts(pod *v1.Pod, requirements scheduling.Requirements
 // Register ensures that the topology is aware of the given domain names.
 func (t *TopologyGroup) Register(domains ...string) {
 	for _, domain := range domains {
+		LogyballTopologyGroupDomainsScanned.Add(1, map[string]string{logyballTopologyDomainLabel: domain})
 		if _, ok := t.domains[domain]; !ok {
 			t.domains[domain] = 0
 			t.emptyDomains.Insert(domain)
+			LogyballTopologyGroupDomainsInserted.Add(1, map[string]string{logyballTopologyDomainLabel: domain})
 		}
 	}
 }

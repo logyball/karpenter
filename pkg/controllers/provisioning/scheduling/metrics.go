@@ -28,6 +28,9 @@ const (
 	ControllerLabel    = "controller"
 	schedulingIDLabel  = "scheduling_id"
 	schedulerSubsystem = "scheduler"
+
+	logyballNodeNameLabel       = "node_name"
+	logyballTopologyDomainLabel = "domain"
 )
 
 var (
@@ -89,6 +92,80 @@ var (
 		},
 		[]string{
 			ControllerLabel,
+		},
+	)
+
+	LogyballNewSchedulersCreated = opmetrics.NewPrometheusCounter(
+		crmetrics.Registry,
+		prometheus.CounterOpts{
+			Namespace: metrics.Namespace,
+			Subsystem: schedulerSubsystem,
+			Name:      "logyball_new_scheduler_created_total",
+			Help:      "The number of schedulers created (calls to NewScheduler).",
+		},
+		[]string{},
+	)
+
+	LogyballNewSchedulerStateNodesConsidered = opmetrics.NewPrometheusCounter(
+		crmetrics.Registry,
+		prometheus.CounterOpts{
+			Namespace: metrics.Namespace,
+			Subsystem: schedulerSubsystem,
+			Name:      "logyball_new_scheduler_existing_nodes_total",
+			Help:      "The number of nodes existing in the cluster as considered by all runs of NewScheduler.",
+		},
+		[]string{},
+	)
+
+	LogyballNewSchedulerTopologiesConsidered = opmetrics.NewPrometheusCounter(
+		crmetrics.Registry,
+		prometheus.CounterOpts{
+			Namespace: metrics.Namespace,
+			Subsystem: schedulerSubsystem,
+			Name:      "logyball_new_scheduler_topologies_considered_total",
+			Help:      "The number of topologies per node in the cluster as considered by all runs of NewScheduler.",
+		},
+		[]string{
+			logyballNodeNameLabel,
+		},
+	)
+
+	LogyballNewSchedulerInverseTopologiesConsidered = opmetrics.NewPrometheusCounter(
+		crmetrics.Registry,
+		prometheus.CounterOpts{
+			Namespace: metrics.Namespace,
+			Subsystem: schedulerSubsystem,
+			Name:      "logyball_new_scheduler_inverse_topologies_considered_total",
+			Help:      "The number of inverse topologies per node in the cluster as considered by all runs of NewScheduler.",
+		},
+		[]string{
+			logyballNodeNameLabel,
+		},
+	)
+
+	LogyballTopologyGroupDomainsScanned = opmetrics.NewPrometheusCounter(
+		crmetrics.Registry,
+		prometheus.CounterOpts{
+			Namespace: metrics.Namespace,
+			Subsystem: schedulerSubsystem,
+			Name:      "logyball_topology_groups_domains_scanned_total",
+			Help:      "The number domains scanned when registering topologies.",
+		},
+		[]string{
+			logyballTopologyDomainLabel,
+		},
+	)
+
+	LogyballTopologyGroupDomainsInserted = opmetrics.NewPrometheusCounter(
+		crmetrics.Registry,
+		prometheus.CounterOpts{
+			Namespace: metrics.Namespace,
+			Subsystem: schedulerSubsystem,
+			Name:      "logyball_topology_groups_domains_inserted_total",
+			Help:      "The number domains inserted into a new set when registering topologies.",
+		},
+		[]string{
+			logyballTopologyDomainLabel,
 		},
 	)
 )

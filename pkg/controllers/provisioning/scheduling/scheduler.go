@@ -49,6 +49,9 @@ func NewScheduler(ctx context.Context, kubeClient client.Client, nodePools []*v1
 	instanceTypes map[string][]*cloudprovider.InstanceType, daemonSetPods []*corev1.Pod,
 	recorder events.Recorder, clock clock.Clock) *Scheduler {
 
+	// register the creation of a new scheduler
+	defer LogyballNewSchedulersCreated.Add(1, map[string]string{})
+
 	// if any of the nodePools add a taint with a prefer no schedule effect, we add a toleration for the taint
 	// during preference relaxation
 	toleratePreferNoSchedule := false
@@ -316,6 +319,9 @@ func (s *Scheduler) add(ctx context.Context, pod *corev1.Pod) error {
 }
 
 func (s *Scheduler) calculateExistingNodeClaims(stateNodes []*state.StateNode, daemonSetPods []*corev1.Pod) {
+	// register the size of stateNodes - active nodes in our cluster
+	LogyballNewSchedulerStateNodesConsidered.Add(float64(len(stateNodes)), map[string]string{})
+
 	// create our existing nodes
 	for _, node := range stateNodes {
 		// Calculate any daemonsets that should schedule to the inflight node
